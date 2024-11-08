@@ -37,7 +37,7 @@ func main() {
 
 	// Записываем значения флагов командной строки port и env в структуру
 	// конфигурации. По умолчанию мы используем номер порта 8000 и среду development.
-	flag.IntVar(&cfg.port, "port", 8000, "API server port")
+	flag.IntVar(&cfg.port, "port", 4000, "API server port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
 	flag.Parse()
 
@@ -55,14 +55,15 @@ func main() {
 	// Объявляем новый мультиплексор и добавляем маршрут `/v1/healthcheck`,
 	// который будет перенаправлять запросы в метод `healhcheckHandler`
 	// (мы создадим его чуть позже).
-	mux := http.NewServeMux()
-	mux.HandleFunc("/v1/healthcheck", app.healthcheckHandler)
+	// mux := http.NewServeMux()
+	// mux.HandleFunc("/v1/healthcheck", app.healthcheckHandler)
 
 	// Объявляем HTTP-сервер с настройками тайм-аута, который прослушивает порт,
 	// указанный в структуре конфигурации, и использует созданный выше мультиплексор.
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", cfg.port),
-		Handler:      mux,
+		Addr: fmt.Sprintf(":%d", cfg.port),
+		// Handler:      mux,
+		Handler:      app.routes(),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
