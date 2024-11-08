@@ -1,0 +1,4 @@
+curl -i localhost:8000/v1/healthcheck
+
+ go run .\cmd\api\ -port=4000
+ curl -i localhost:4000/v1/healthcheck
